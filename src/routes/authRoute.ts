@@ -1,7 +1,7 @@
 import { validateData } from "../middleware/validationMiddleware";
-import { userRegisteration } from "../controller/authController";
+import { userLogin, userRegisteration } from "../controller/authController";
 import { Router } from "express";
-import { userSignupSchema } from "../utils/validation/schema";
+import { userLoginSchema, userSignupSchema } from "../utils/validation/schema";
 
 /**
  * @constant {express.Router}
@@ -11,6 +11,7 @@ const router: Router = Router();
 /* POST request */
 
 router.post("/signup", validateData(userSignupSchema), userRegisteration); // registeration api
+router.post("/login", validateData(userLoginSchema), userLogin); // login api
 
 /**
  * @export {express.Router}

@@ -27,7 +27,7 @@ const habitSchema = new Schema<HabitDocument>(
       required: true,
     },
     daysOfWeek: {
-      type: [Number], // Only used if frequency = "weekly"
+      type: [Number],
       validate: {
         validator: (arr: number[]) =>
           arr.every((num) => num >= 0 && num <= 6),
