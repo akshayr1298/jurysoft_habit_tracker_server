@@ -4,6 +4,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import cors from "cors";
+import rateLimit from "express-rate-limit";
 import config from "./config/env";
 import logger from "./lib/logger";
 import { connectDB } from "./config/database";
@@ -13,6 +14,18 @@ dotenv.config();
 
 const app: express.Application = express();
 const origin: string = process.env.ORIGIN ?? "*";
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP
+  message: {
+    success: false,
+    status: 429,
+    message: "Too many requests, please try again later.",
+  },
+  standardHeaders: true, // return rate limit info in headers
+  legacyHeaders: false,  // disable X-RateLimit headers
+});
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -27,6 +40,7 @@ app.use(
   })
 );
 
+app.use(limiter);
 /*application middleware config in routes */
 app.get("/", (req: Request, res: Response) => {
   console.log("server is running");
