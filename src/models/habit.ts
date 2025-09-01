@@ -1,12 +1,12 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 
 export interface HabitInterface {
-  userId: mongoose.Types.ObjectId; 
+  userId: mongoose.Types.ObjectId;
   title: string;
   description?: string;
   startDate: Date;
   endDate?: Date;
-  completedDates: Date[]; 
+  completedDates: Date[];
   isActive: boolean;
   createdAt?: Date;
   updatedAt?: Date;
@@ -31,6 +31,7 @@ const habitSchema = new Schema<HabitDocument>(
   }
 );
 
+habitSchema.index({ title: 1 });
 const HabitModel: Model<HabitDocument> = mongoose.model<HabitDocument>(
   "Habit",
   habitSchema

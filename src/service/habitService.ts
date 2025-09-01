@@ -3,6 +3,7 @@ import AppError from "../lib/error";
 import { ConflictError, NotFoundError, ServerError } from "../lib/error/error";
 import HabitModel, { HabitInterface } from "../models/habit";
 import logger from "../lib/logger";
+import { isToday } from "../utils/helper";
 
 const habitService = {
   async createHabit(
@@ -11,9 +12,20 @@ const habitService = {
   ): Promise<HabitInterface> {
     try {
       const { title, description, startDate }: HabitInterface = data;
-      const existingHabit = await HabitModel.findOne({ userId, title });
+      const existingHabit = await HabitModel.findOne(
+        {
+          userId: new Types.ObjectId(userId),
+          title: { $regex: title, $options: "i" },
+        },
+        { title: 1 }
+      );
       if (existingHabit) {
-        throw new ConflictError(`This habit already exists for the user.`);
+        logger.warn(
+          `This ${existingHabit.title} habit already exists for the user with userID ${userId}`
+        );
+        throw new ConflictError(
+          `This ${existingHabit.title} habit already exists for the user.`
+        );
       }
       const newHabit = await HabitModel.create({
         userId: new Types.ObjectId(userId),
@@ -40,6 +52,15 @@ const habitService = {
       if (!habit) {
         throw new NotFoundError("Habit not found.");
       }
+
+      const alreadyDoneToday = habit.completedDates.some((date) =>
+        isToday(date)
+      );
+
+      if (alreadyDoneToday) {
+        throw new ConflictError("You already marked as done");
+      }
+
       const updatedHabit = await HabitModel.findByIdAndUpdate(
         id,
         { $push: { completedDates: new Date() } },
@@ -55,7 +76,7 @@ const habitService = {
     }
   },
 
-  async resetHabit(id: string) {
+  async resetHabit(id: string): Promise<Partial<HabitInterface> | null> {
     try {
       const habit = await HabitModel.findByIdAndUpdate(
         id,
@@ -66,6 +87,42 @@ const habitService = {
         throw new NotFoundError("Habit not found.");
       }
       return habit;
+    } catch (error: any) {
+      if (error instanceof AppError) {
+        throw error;
+      } else {
+        throw new ServerError();
+      }
+    }
+  },
+
+  async getAllHabits(
+    filter: string,
+    title: string,
+    userId: string
+  ): Promise<any> {
+    try {
+      const matchStage: any = {
+        userId: new Types.ObjectId(userId),
+      };
+
+      if (title) {
+        matchStage.title = { $regex: title, $options: "i" };
+      }
+
+      if (filter === "completed") {
+        matchStage.completedDates = { $exists: true, $ne: [] }; 
+      } else if (filter === "non-completed") {
+        matchStage.completedDates = { $eq: [] }; 
+      }
+
+      const pipeline: any = [
+        { $match: matchStage },
+        { $sort: { createdAt: -1 } }, 
+      ];
+
+      const habits = await HabitModel.aggregate(pipeline);
+      return habits;
     } catch (error: any) {
       if (error instanceof AppError) {
         throw error;
