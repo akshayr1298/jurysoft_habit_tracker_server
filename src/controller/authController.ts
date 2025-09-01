@@ -3,6 +3,13 @@ import logger from "../lib/logger";
 import authService from "../service/authService";
 import statusCodes from "../lib/statusCode";
 
+/**
+ *
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ * @returns {Promise}
+ */
 export const userRegisteration = async (
   req: Request,
   res: Response,
@@ -24,6 +31,14 @@ export const userRegisteration = async (
       .json({ message: error.message, success: false, code: error.statusCode });
   }
 };
+
+/**
+ *
+ * @param {Request} req
+ * @param {Response} res
+ * @param {NextFunction} next
+ * @returns {Promise}
+ */
 
 export const userLogin = async (
   req: Request,

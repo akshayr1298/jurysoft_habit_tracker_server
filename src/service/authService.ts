@@ -11,12 +11,11 @@ import config from "../config/env";
 import logger from "../lib/logger";
 
 const authService = {
-  /**
-   * @param {string} firstName
-   * @param {string} lastName
-   * @param {string} email
-   * @param {string} password
-   */
+ /**
+  * 
+  * @param {UserModelInterface} data 
+  * @returns {Promise}
+  */
 
   async signup(
     data: UserModelInterface
@@ -66,6 +65,12 @@ const authService = {
     }
   },
 
+  /**
+   * 
+   * @param {string} email 
+   * @param {string} password 
+   * @returns {Promise}
+   */
   async login(
     email: string,
     password: string
