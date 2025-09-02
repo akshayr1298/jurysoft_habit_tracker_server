@@ -43,7 +43,7 @@ app.use(
 app.use(limiter);
 /*application middleware config in routes */
 app.get("/", (req: Request, res: Response) => {
-  console.log("server is running");
+  logger.info("server is running");
 });
 Routes.init(app);
 
