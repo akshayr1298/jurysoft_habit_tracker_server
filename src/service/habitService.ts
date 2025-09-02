@@ -38,6 +38,8 @@ const habitService = {
       );
       return newHabit;
     } catch (error: any) {
+      console.log('err',error);
+      
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -68,6 +70,7 @@ const habitService = {
       );
       return updatedHabit;
     } catch (error: any) {
+      console.log('err',error)
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -88,6 +91,7 @@ const habitService = {
       }
       return habit;
     } catch (error: any) {
+      console.log('err',error)
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -112,7 +116,7 @@ const habitService = {
 
       if (filter === "completed") {
         matchStage.completedDates = { $exists: true, $ne: [] }; 
-      } else if (filter === "non-completed") {
+      } else if (filter === "notCompleted") {
         matchStage.completedDates = { $eq: [] }; 
       }
 
