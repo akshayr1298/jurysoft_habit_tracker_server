@@ -3,17 +3,50 @@ import { userLogin, userRegisteration } from "../controller/authController";
 import { Router } from "express";
 import { userLoginSchema, userSignupSchema } from "../utils/validation/schema";
 
-/**
- * @constant {express.Router}
- */
 const router: Router = Router();
 
-/* POST request */
-
-router.post("/signup", validateData(userSignupSchema), userRegisteration); // registeration api
-router.post("/login", validateData(userLoginSchema), userLogin); // login api
+/**
+ * @openapi
+ * /auth/signup:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Register a new user
+ *     description: Creates a new user account using email and password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserSignup'
+ *     responses:
+ *       201:
+ *         description: User created successfully
+ *       400:
+ *         description: Validation error
+ */
+router.post("/signup", validateData(userSignupSchema), userRegisteration);
 
 /**
- * @export {express.Router}
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     tags:
+ *       - Auth
+ *     summary: Login user
+ *     description: Authenticates user with email and password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserLogin'
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *       401:
+ *         description: Invalid credentials
  */
+router.post("/login", validateData(userLoginSchema), userLogin);
+
 export default router;
