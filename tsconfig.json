@@ -32,7 +32,7 @@
 
                                  /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "__test__"],
   "exclude": ["node_modules", "**/*.spec.ts"]
  
   
