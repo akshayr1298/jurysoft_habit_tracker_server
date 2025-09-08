@@ -5,14 +5,14 @@ import * as path from "path";
 import fs from "fs";
 const logsDirectory = path.resolve(__dirname, "../../logs");
 
-// Create the logger instance
+//* Create the logger instance
 if (!fs.existsSync(logsDirectory)) {
   fs.mkdirSync(logsDirectory);
 }
 
 const logger = createLogger({
   transports: [
-    // Console transport for development
+    //* Console transport for development
     new transports.Console({
       format: format.combine(
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
@@ -23,7 +23,7 @@ const logger = createLogger({
       ),
     }),
 
-    // Error log file transport
+    //! Error log file transport
     new transports.DailyRotateFile({
       level: "error",
       filename: `${logsDirectory}/error-%DATE%.log`,
@@ -37,7 +37,7 @@ const logger = createLogger({
       ),
     }),
 
-    // Warning log file transport
+    //TODO: Warning log file transport
     new transports.DailyRotateFile({
       level: "warn",
       filename: `${logsDirectory}/warn-%DATE%.log`,
@@ -51,7 +51,7 @@ const logger = createLogger({
       ),
     }),
 
-    // Info and below log file transport
+    //? Info and below log file transport
     new transports.DailyRotateFile({
       level: "info",
       filename: `${logsDirectory}/info-%DATE%.log`,

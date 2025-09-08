@@ -1,6 +1,7 @@
 import statusCodes from "../statusCode";
 import AppError, { ErrorType } from "./index";
 
+//* create instance for each expection
 export class BadRequestError extends AppError {
   constructor(message: string = "Bad Request") {
     super(ErrorType.BAD_REQUEST, statusCodes.BAD_REQUEST, message);
@@ -27,7 +28,7 @@ export class UnauthorizedError extends AppError {
 
 export class ConflictError extends AppError {
   constructor(message: string = "conflict") {
-    super(ErrorType.CONFLICT, statusCodes.FORBIDDEN, message);
+    super(ErrorType.CONFLICT, statusCodes.CONFLICT, message);
   }
 }
 

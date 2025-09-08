@@ -5,7 +5,9 @@ import { Types } from "mongoose";
 import { HabitInterface } from "../models/habit";
 
 const userService = {
-  async getProfile(id: string): Promise<Partial<UserModelInterface> | null> {
+  async getProfile(
+    id: string
+  ): Promise<Omit<UserModelInterface, "email" | "password"> | null> {
     try {
       const user = await UserModel.findById(
         { _id: new Types.ObjectId(id) },
@@ -21,8 +23,6 @@ const userService = {
     }
   },
 
-  async addHabit(body: HabitInterface) {
-    
-  },
+  async addHabit(body: HabitInterface) {},
 };
 export default userService;

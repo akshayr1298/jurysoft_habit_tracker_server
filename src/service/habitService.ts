@@ -19,7 +19,7 @@ const habitService = {
         },
         { title: 1 }
       );
-      if (existingHabit) {
+      if (existingHabit) { //* check habit is already exist or not
         logger.warn(
           `This ${existingHabit.title} habit already exists for the user with userID ${userId}`
         );
@@ -37,9 +37,7 @@ const habitService = {
         `habbit added succcessfully by userId:${userId} habitId: ${newHabit.id}`
       );
       return newHabit;
-    } catch (error: any) {
-      console.log('err',error);
-      
+    } catch (error: any) {      
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -70,7 +68,6 @@ const habitService = {
       );
       return updatedHabit;
     } catch (error: any) {
-      console.log('err',error)
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -109,22 +106,22 @@ const habitService = {
       const matchStage: any = {
         userId: new Types.ObjectId(userId),
       };
-
+      //* filter based on title
       if (title) {
         matchStage.title = { $regex: title, $options: "i" };
       }
-
+      //* filter based on completed dates
       if (filter === "completed") {
         matchStage.completedDates = { $exists: true, $ne: [] }; 
       } else if (filter === "notCompleted") {
         matchStage.completedDates = { $eq: [] }; 
       }
-
+   
       const pipeline: any = [
         { $match: matchStage },
         { $sort: { createdAt: -1 } }, 
       ];
-
+      //* agregation pipeline
       const habits = await HabitModel.aggregate(pipeline);
       return habits;
     } catch (error: any) {
