@@ -32,7 +32,8 @@
 
                                  /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/**/*", "__test__"],
+  // "include": ["src/**/*", "src/__test__"],
+  "include": ["src/**/*", "__test__/**/*"],
   "exclude": ["node_modules", "**/*.spec.ts"]
  
   
