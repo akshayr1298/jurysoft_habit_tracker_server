@@ -16,3 +16,7 @@ npm run dev
 npm run test 
 
 NODE_ENV=test npm test
+
+## 2. API docs
+
+http://localhost:4000/docs 
