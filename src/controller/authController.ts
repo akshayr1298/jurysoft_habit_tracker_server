@@ -3,6 +3,7 @@ import logger from "../lib/logger";
 import authService from "../service/authService";
 import statusCodes from "../lib/statusCode";
 
+//? user registeration API
 /**
  *
  * @param {Request} req
@@ -18,6 +19,7 @@ export const userRegisteration = async (
   try {
     const response = await authService.signup(req.body);
     return res.status(statusCodes.CREATED).json({
+      //* success response
       message: "Account registed successfully",
       success: true,
       code: 201,
@@ -25,13 +27,14 @@ export const userRegisteration = async (
       refreshToken: response.refreshToken,
     });
   } catch (error: any) {
-    logger.error(error.message);
+    logger.error(error.message); //! exception logger
     return res
-      .status(error.statusCode)
+      .status(error.statusCode) //! exception response
       .json({ message: error.message, success: false, code: error.statusCode });
   }
 };
 
+//? user Login API
 /**
  *
  * @param {Request} req
@@ -49,6 +52,7 @@ export const userLogin = async (
     const { email, password } = req.body;
     const response = await authService.login(email, password);
     return res.status(statusCodes.OK).json({
+      //* success response
       message: "Account login successfully",
       success: true,
       code: 200,
@@ -56,9 +60,9 @@ export const userLogin = async (
       refreshToken: response.refreshToken,
     });
   } catch (error: any) {
-    logger.error(error.message);
+    logger.error(error.message); //! exception message
     return res
-      .status(error.statusCode)
+      .status(error.statusCode) //! exception response
       .json({ message: error.message, success: false, code: error.statusCode });
   }
 };

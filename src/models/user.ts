@@ -25,6 +25,9 @@ const userModelSchema = new Schema<UserModleDocument>(
   }
 );
 
+//? compound index 
+userModelSchema.index({ firstName: 1, lastName: 1 });
+
 const UserModel: Model<UserModleDocument> = mongoose.model<UserModleDocument>(
   "User",
   userModelSchema

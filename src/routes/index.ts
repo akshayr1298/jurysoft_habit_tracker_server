@@ -12,6 +12,6 @@ export function init(app: express.Application) {
 
   app.use("/auth", authRouter);
   app.use("/profile", auth, userRouter);
-  app.use("/habit", auth, habitRouter);
+  app.use("/habits", auth, habitRouter);
   app.use(router);
 }

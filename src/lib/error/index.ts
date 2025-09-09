@@ -1,5 +1,6 @@
 import { Response } from "express";
 
+//* enum for error type
 export enum ErrorType {
   BAD_REQUEST = "BadRequest",
   NOT_FOUND = "NotFound",
@@ -11,6 +12,7 @@ export enum ErrorType {
   SERVER_ERROR = "ServerError",
 }
 
+//* create a error istance
 class AppError extends Error {
   type: ErrorType;
   statusCode: number;

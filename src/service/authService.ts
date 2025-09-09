@@ -23,8 +23,8 @@ const authService = {
     try {
       const { firstName, lastName, email, password } = data;
       const userExist = await UserModel.findOne({ email: email }, { id: true });
-      if (userExist) {
-        throw new ConflictError(
+      if (userExist) { //* check user aleady registered or not
+        throw new ConflictError( 
           `This email is ${email} already registered try another email`
         );
       }
@@ -36,6 +36,7 @@ const authService = {
         password: hashedPassword,
       });
       logger.info(`user registered successfully userId: ${user.id}`);
+       //* generate token
       let secret: string | any = config.jwtSecret;
       const accessToken: string = jwt.sign(
         { userId: user.id, eamil: user.email },
@@ -77,14 +78,17 @@ const authService = {
   ): Promise<{ accessToken: string; refreshToken: string }> {
     try {
       const user = await UserModel.findOne({ email: email });
+      //! check user credential
       if (!user) {
         throw new UnauthorizedError("Invalid credential");
       }
+      //! check password is correct or not
       const checkPassword = await comparePassword(password, user.password);
       if (!checkPassword) {
         throw new UnauthorizedError("Invalid credential");
       }
       logger.info(`user login successfully userId: ${user.id}`);
+      //* generate token
       let secret: string | any = config.jwtSecret;
       const accessToken: string = jwt.sign(
         { userId: user.id, eamil: user.email },

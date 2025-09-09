@@ -9,25 +9,47 @@ import config from "./config/env";
 import logger from "./lib/logger";
 import { connectDB } from "./config/database";
 import * as Routes from "./routes";
+import { swaggerDocs } from "./config/swagger";
 
 dotenv.config();
 
 const app: express.Application = express();
 const origin: string = process.env.ORIGIN ?? "*";
+const port = config.port as number;
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP
+  windowMs: 15 * 60 * 1000, //* 15 minutes
+  max: 100, //* limit each IP
   message: {
     success: false,
     status: 429,
     message: "Too many requests, please try again later.",
   },
-  standardHeaders: true, // return rate limit info in headers
-  legacyHeaders: false,  // disable X-RateLimit headers
+  standardHeaders: true, //* return rate limit info in headers
+  legacyHeaders: false, //* disable X-RateLimit headers
 });
 
-app.use(morgan("dev"));
+// app.use(morgan("dev"));
+
+const morganFormate: string = ":method :url :status :response-time ms";
+app.use(morgan(morganFormate));
+app.use(
+  morgan(morganFormate, {
+    stream: {
+      write: (message) => {
+        //* Correcting the split method usage
+        const parts = message.split(" ");
+        const logObj = {
+          method: parts[0], //* HTTP method
+          url: parts[1], //* URL
+          status: parts[2], //* HTTP status code
+          responseTime: parts[parts.length - 2], //* Response time in ms
+        };
+        logger.info(JSON.stringify(logObj));
+      },
+    },
+  })
+);
 app.use(helmet());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,21 +63,21 @@ app.use(
 );
 
 app.use(limiter);
-/*application middleware config in routes */
+//*application middleware config in routes
 app.get("/", (req: Request, res: Response) => {
   logger.info("server is running");
 });
 Routes.init(app);
-
-// error handling-middleware
+swaggerDocs(app, port);
+//! error handling-middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error("NOT FOUND") as any;
-  error.status = 404;
+  error.statusCode = 404;
   next(error);
 });
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   const errorStatus = err.statusCode ?? 500;
-  const errorMessage = err.message ?? "Something went to wong!";  
+  const errorMessage = err.message ?? "Something went to wrong!";
   return res.status(errorStatus).json({
     succes: false,
     status: errorStatus,
@@ -64,8 +86,10 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-const port = config.port;
-app.listen(port, async () => {
-  await connectDB();
-  logger.info(`server is running on port: ${port}`);
-});
+if (config.NODE_ENV !== "test") {
+  app.listen(port, async () => {
+    await connectDB();
+    logger.info(`Server is running on port: ${port}`);
+  });
+}
+export default app;

@@ -31,6 +31,7 @@ const habitSchema = new Schema<HabitDocument>(
   }
 );
 
+//? index the title
 habitSchema.index({ title: 1 });
 const HabitModel: Model<HabitDocument> = mongoose.model<HabitDocument>(
   "Habit",
