@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import logger from "../lib/logger";
 import authService from "../service/authService";
 import statusCodes from "../lib/statusCode";
+import AppError from "../lib/error";
 
 //? user registeration API
 /**
@@ -26,11 +27,17 @@ export const userRegisteration = async (
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
     });
-  } catch (error: any) {
-    logger.error(error.message); //! exception logger
-    return res
-      .status(error.statusCode) //! exception response
-      .json({ message: error.message, success: false, code: error.statusCode });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      logger.error(error.message); //! exception logger
+      return res
+        .status(error.statusCode) //! exception response
+        .json({
+          message: error.message,
+          success: false,
+          code: error.statusCode,
+        });
+    }
   }
 };
 
@@ -59,10 +66,16 @@ export const userLogin = async (
       accessToken: response.accessToken,
       refreshToken: response.refreshToken,
     });
-  } catch (error: any) {
-    logger.error(error.message); //! exception message
-    return res
-      .status(error.statusCode) //! exception response
-      .json({ message: error.message, success: false, code: error.statusCode });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      logger.error(error.message); //! exception message
+      return res
+        .status(error.statusCode) //! exception response
+        .json({
+          message: error.message,
+          success: false,
+          code: error.statusCode,
+        });
+    }
   }
 };
