@@ -14,7 +14,7 @@ const userService = {
         { _id: 0, firstName: 1, lastName: 1 }
       ).lean();
       return user;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         throw error;
       } else {

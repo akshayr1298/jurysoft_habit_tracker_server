@@ -57,7 +57,7 @@ const authService = {
         refreshToken: refreshToken,
       };
       return token;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -109,7 +109,7 @@ const authService = {
         refreshToken: refreshToken,
       };
       return token;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         throw error;
       } else {

@@ -9,7 +9,7 @@ export function validateData(schema: z.ZodObject<any, any>) {
     try {
       schema.parse(req.body); //* validate payload or req.body based specific schema
       next();
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof ZodError) { //! throw error if it does not match the schema
         const errorMessages: string = error.issues[0].message;
         logger.error(`Invalid data: ${errorMessages}`)

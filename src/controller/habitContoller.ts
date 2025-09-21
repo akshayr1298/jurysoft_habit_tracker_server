@@ -2,9 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import logger from "../lib/logger";
 import habitService from "../service/habitService";
 import statusCodes from "../lib/statusCode";
+import AppError from "../lib/error";
+import { AuthenticatedRequest, ParamsRequest } from "../@types/type";
 
 export const addHabit = async (
-  req: Request | any,
+  req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
@@ -16,16 +18,20 @@ export const addHabit = async (
       success: true,
       data: response,
     });
-  } catch (error: any) {
-    logger.error(error.message);
-    return res
-      .status(error.statusCode)
-      .json({ message: error.message, success: false, code: error.statusCode });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      logger.error(error.message);
+      return res.status(error.statusCode).json({
+        message: error.message,
+        success: false,
+        code: error.statusCode,
+      });
+    }
   }
 };
 
 export const markDone = async (
-  req: Request,
+  req: ParamsRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
@@ -38,16 +44,20 @@ export const markDone = async (
       success: true,
       data: response,
     });
-  } catch (error: any) {
-    logger.error(error.message);
-    return res
-      .status(error.statusCode)
-      .json({ message: error.message, success: false, code: error.statusCode });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      logger.error(error.message);
+      return res.status(error.statusCode).json({
+        message: error.message,
+        success: false,
+        code: error.statusCode,
+      });
+    }
   }
 };
 
 export const resetHabit = async (
-  req: Request,
+  req: ParamsRequest,
   res: Response,
   next: NextFunction
 ): Promise<Response | void> => {
@@ -60,11 +70,15 @@ export const resetHabit = async (
       success: true,
       data: response,
     });
-  } catch (error: any) {
-    logger.error(error.message);
-    return res
-      .status(error.statusCode)
-      .json({ message: error.message, success: false, code: error.statusCode });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      logger.error(error.message);
+      return res.status(error.statusCode).json({
+        message: error.message,
+        success: false,
+        code: error.statusCode,
+      });
+    }
   }
 };
 
@@ -83,10 +97,14 @@ export const getAllHabits = async (
       success: true,
       data: response,
     });
-  } catch (error: any) {
-    logger.error(error.message);
-    return res
-      .status(error.statusCode)
-      .json({ message: error.message, success: false, code: error.statusCode });
+  } catch (error: unknown) {
+    if (error instanceof AppError) {
+      logger.error(error.message);
+      return res.status(error.statusCode).json({
+        message: error.message,
+        success: false,
+        code: error.statusCode,
+      });
+    }
   }
 };

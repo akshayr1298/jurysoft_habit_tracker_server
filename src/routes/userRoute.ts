@@ -1,5 +1,5 @@
 import { profile } from "../controller/userController";
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 
 /**
  * @constant {express.Router}
@@ -15,7 +15,7 @@ const router: Router = Router();
  *     tags:
  *       - User
  *     summary: Get user profile
- *     description: Returns profile of the authenticated user.  
+ *     description: Returns profile of the authenticated user.
  *                  Requires both Bearer token and Refresh token in headers.
  *     security:
  *       - bearerAuth: []
@@ -31,7 +31,7 @@ const router: Router = Router();
  *         description: Unauthorized - Missing or invalid tokens
  */
 
-router.get("/", profile);
+router.get("/", profile as RequestHandler);
 /**
  * @export {express.Router}
  */

@@ -37,7 +37,7 @@ const habitService = {
         `habbit added succcessfully by userId:${userId} habitId: ${newHabit.id}`
       );
       return newHabit;
-    } catch (error: any) {      
+    } catch (error: unknown) {      
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -67,7 +67,7 @@ const habitService = {
         { new: true }
       );
       return updatedHabit;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -87,8 +87,7 @@ const habitService = {
         throw new NotFoundError("Habit not found.");
       }
       return habit;
-    } catch (error: any) {
-      console.log('err',error)
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         throw error;
       } else {
@@ -124,7 +123,7 @@ const habitService = {
       //* agregation pipeline
       const habits = await HabitModel.aggregate(pipeline);
       return habits;
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (error instanceof AppError) {
         throw error;
       } else {

@@ -5,7 +5,7 @@ import {
   markDone,
   resetHabit,
 } from "../controller/habitContoller";
-import { Router } from "express";
+import { RequestHandler, Router } from "express";
 import { createHabitsSchema } from "../utils/validation/schema";
 
 /**
@@ -42,7 +42,7 @@ const router: Router = Router();
  *       409:
  *         description: This habit already exists for the user
  */
-router.post("/", validateData(createHabitsSchema), addHabit);
+router.post("/", validateData(createHabitsSchema), addHabit as RequestHandler);
 
 /**
  * @openapi
@@ -69,7 +69,7 @@ router.post("/", validateData(createHabitsSchema), addHabit);
  *       404:
  *         description: Habit not found
  */
-router.patch("/:id", markDone);
+router.patch("/:id", markDone as RequestHandler);
 
 /**
  * @openapi
@@ -96,7 +96,7 @@ router.patch("/:id", markDone);
  *       404:
  *         description: Habit not found
  */
-router.patch("/reset/:id", resetHabit);
+router.patch("/reset/:id", resetHabit as RequestHandler);
 
 /**
  * @openapi
